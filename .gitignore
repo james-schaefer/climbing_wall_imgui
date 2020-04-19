@@ -1,0 +1,5 @@
+imgui.ini
+libshm_vars/libshm_vars.a
+*.o
+*.swp
+climbing_wall_gui

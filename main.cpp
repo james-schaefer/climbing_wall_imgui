@@ -104,23 +104,15 @@ int main(int, char**)
             static int speed   =  SHM::req_speed->get();
             static int incline =  SHM::req_incline->get();
 
-            static bool run_button_gate = false;
-            static bool pause_button_gate = false;
-
             static constexpr const char* 
               incline_label_overhang  = "(degrees overhang)"; 
             static constexpr const char* 
               incline_label_vertical  = "(dead vertical)"; 
             static constexpr const char* 
               incline_label_slab  = "(degrees slab)"; 
+            static const ImVec2 button_size(200, 75); 
 
             ImGui::Begin("Simple Controls");      
-
-// InputInt(const char* label, 
-//          int* v, 
-//          int step = 1, 
-//          int step_fast = 100, 
-//          ImGuiInputTextFlags flags = 0);
 
             ImGui::SetNextItemWidth(400);
             ImGui::InputInt("speed (feet per minute)", &speed, 1, 3);    
@@ -140,33 +132,14 @@ int main(int, char**)
             if (incline < -90 ) incline = -90;
             if (incline >   15) incline =  15;
 
-            if (ImGui::Button("Run"))                             
+            if (ImGui::Button("Run", button_size))                             
             {
-                if (!run_button_gate)
-		{ // gate used to differentiate between initial press and a 
-                  // hold.  don't trigger every frame while the button is held.
-                    run_button_gate = true;
-                    SHM::req_speed->set(speed);
-                    SHM::req_incline->set(incline);
-		}
+               SHM::req_speed->set(speed);
+               SHM::req_incline->set(incline);
             }
-            else 
-            {
-              run_button_gate = false;
-            }
+
             ImGui::SameLine();
-            if (ImGui::Button("Pause"))
-            {
-                if (!pause_button_gate)
-		{
-                    pause_button_gate = true;
-                    SHM::req_speed->set(0);
-		}
-            }
-            else 
-            {
-              pause_button_gate = false;
-            }
+            if (ImGui::Button("Pause", button_size)) SHM::req_speed->set(0);
 
             //ImGui::Button("Emergency Stop!!");
             ImGui::End();

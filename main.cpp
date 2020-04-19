@@ -40,7 +40,7 @@ int main(int, char**)
     SDL_WindowFlags win_flags = (SDL_WindowFlags)(  SDL_WINDOW_OPENGL 
                                                   | SDL_WINDOW_RESIZABLE 
                                                   | SDL_WINDOW_ALLOW_HIGHDPI);
-    SDL_Window* window = SDL_CreateWindow("Treadwall", 
+    SDL_Window* window = SDL_CreateWindow("Ascent FunRock!", 
                                            SDL_WINDOWPOS_CENTERED, 
                                            SDL_WINDOWPOS_CENTERED, 
                                            1920, 
@@ -114,11 +114,18 @@ int main(int, char**)
             static constexpr const char* 
               incline_label_slab  = "(degrees slab)"; 
 
-            ImGui::Begin("Simple Climbing Wall Controls");      
+            ImGui::Begin("Simple Controls");      
 
+// InputInt(const char* label, 
+//          int* v, 
+//          int step = 1, 
+//          int step_fast = 100, 
+//          ImGuiInputTextFlags flags = 0);
 
-            ImGui::SliderInt("speed (feet per minute)", &speed, 0, 45);    
-            ImGui::SliderInt("incline", &incline, -85, 10);  
+            ImGui::SetNextItemWidth(400);
+            ImGui::InputInt("speed (feet per minute)", &speed, 1, 3);    
+            ImGui::SetNextItemWidth(400);
+            ImGui::InputInt("incline", &incline, 1, 3);  
               ImGui::SameLine();   
               if (incline < 0)
                   {ImGui::Text(incline_label_overhang);}
@@ -126,6 +133,12 @@ int main(int, char**)
                   {ImGui::Text(incline_label_vertical);}
               else if (incline > 0)
                   {ImGui::Text(incline_label_slab);}
+            
+            // bounds checking on user input:
+            if (speed   >   50) speed   =  50;
+            if (speed   <   0 ) speed   =  0;
+            if (incline < -90 ) incline = -90;
+            if (incline >   15) incline =  15;
 
             if (ImGui::Button("Run"))                             
             {

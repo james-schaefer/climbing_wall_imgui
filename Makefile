@@ -69,3 +69,6 @@ $(EXE): $(OBJS) $(LIBSHM)
 
 clean:
 	rm -f $(EXE) $(OBJS)
+
+run:
+	sudo ./$(EXE)

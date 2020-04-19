@@ -110,6 +110,7 @@ int main(int, char**)
               incline_label_vertical  = "(dead vertical)"; 
             static constexpr const char* 
               incline_label_slab  = "(degrees slab)"; 
+
             static const ImVec2 button_size(200, 75); 
 
             ImGui::Begin("Simple Controls");      

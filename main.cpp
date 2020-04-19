@@ -103,8 +103,9 @@ int main(int, char**)
         {
             static int speed   =  SHM::req_speed->get();
             static int incline =  SHM::req_incline->get();
-            static bool run_button_pressed = false;
-            static bool pause_button_pressed = false;
+
+            static bool run_button_gate = false;
+            static bool pause_button_gate = false;
 
             static constexpr const char* 
               incline_label_overhang  = "(degrees overhang)"; 
@@ -126,27 +127,32 @@ int main(int, char**)
               else if (incline > 0)
                   {ImGui::Text(incline_label_slab);}
 
-            if (ImGui::Button("Run") && !run_button_pressed)                             
+            if (ImGui::Button("Run"))                             
             {
-                run_button_pressed = true;
-                SHM::req_incline->set(speed);
-                SHM::req_incline->set(incline);
+                if (!run_button_gate)
+		{ // gate used to differentiate between initial press and a 
+                  // hold.  don't trigger every frame while the button is held.
+                    run_button_gate = true;
+                    SHM::req_speed->set(speed);
+                    SHM::req_incline->set(incline);
+		}
             }
             else 
             {
-              run_button_pressed = false;
+              run_button_gate = false;
             }
-            
-            
-              ImGui::SameLine();
-            if (ImGui::Button("Pause") && !pause_button_pressed)                             
+            ImGui::SameLine();
+            if (ImGui::Button("Pause"))
             {
-                pause_button_pressed = true;
-                SHM::req_incline->set(0);
+                if (!pause_button_gate)
+		{
+                    pause_button_gate = true;
+                    SHM::req_speed->set(0);
+		}
             }
             else 
             {
-              pause_button_pressed = false;
+              pause_button_gate = false;
             }
 
             //ImGui::Button("Emergency Stop!!");

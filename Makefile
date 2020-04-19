@@ -64,7 +64,7 @@ $(LIBSHM): $(LIBSHMDIR)Shm.h $(LIBSHMDIR)Shm_vars.h  \
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 
-$(EXE): $(OBJS)
+$(EXE): $(OBJS) $(LIBSHM)
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS) $(LDFLAGS)
 
 clean:

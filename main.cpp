@@ -6,8 +6,8 @@
 #include "imgui_impl_opengl3.h"
 #include <stdio.h>
 #include <SDL.h>
-
 #include <GL/gl3w.h>            // Initialize with gl3wInit()
+#include "Shm_vars.h"
 
 #include <string>
 using std::string;
@@ -15,6 +15,7 @@ using std::string;
 // Main code
 int main(int, char**)
 {
+    SHM::connect_existing_shm();
     // Setup SDL
     if (SDL_Init(  SDL_INIT_VIDEO 
                  | SDL_INIT_TIMER 
@@ -100,8 +101,10 @@ int main(int, char**)
         ImGui_ImplSDL2_NewFrame(window);
         ImGui::NewFrame();
         {
-            static int speed   =  18;
-            static int incline = -5;
+            static int speed   =  SHM::req_speed->get();
+            static int incline =  SHM::req_incline->get();
+            static bool run_button_pressed = false;
+            static bool pause_button_pressed = false;
 
             static constexpr const char* 
               incline_label_overhang  = "(degrees overhang)"; 
@@ -123,11 +126,30 @@ int main(int, char**)
               else if (incline > 0)
                   {ImGui::Text(incline_label_slab);}
 
-            ImGui::Button("Run");                             
+            if (ImGui::Button("Run") && !run_button_pressed)                             
+            {
+                run_button_pressed = true;
+                SHM::req_incline->set(speed);
+                SHM::req_incline->set(incline);
+            }
+            else 
+            {
+              run_button_pressed = false;
+            }
+            
+            
               ImGui::SameLine();
-              ImGui::Button("Pause");
+            if (ImGui::Button("Pause") && !pause_button_pressed)                             
+            {
+                pause_button_pressed = true;
+                SHM::req_incline->set(0);
+            }
+            else 
+            {
+              pause_button_pressed = false;
+            }
 
-            ImGui::Button("Emergency Stop!!");
+            //ImGui::Button("Emergency Stop!!");
             ImGui::End();
         }
 
